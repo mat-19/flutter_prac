@@ -1,9 +1,8 @@
-//import 'dart:html';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_3/component/ProCard.dart';
+import 'package:flutter_application_3/emi/emi.dart';
 
-import 'package:flutter_application_3/component/TopCard.dart';
+import 'package:flutter_application_3/home.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -11,45 +10,41 @@ void main() {
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
-    home: MyApp(),
+    home: _Testapp(),
   ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class _Testapp extends StatefulWidget {
+  const _Testapp({Key? key}) : super(key: key);
+
+  @override
+  __TestappState createState() => __TestappState();
+}
+
+class __TestappState extends State<_Testapp> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: ListView(
-            children: [
-              TopCard(),
-              ProCard(
-                  placeName: 'St.Marks Basilicia',
-                  description: 'Sightseeing Tour',
-                  image: 'images/basilica.jpg',
-                  price: 30),
-              ProCard(
-                  placeName: 'St.Marks Basilicia',
-                  description: 'Sightseeing Tour',
-                  image: 'images/basilica.jpg',
-                  price: 30),
-              ProCard(
-                  placeName: 'St.Marks Basilicia',
-                  description: 'Sightseeing Tour',
-                  image: 'images/basilica.jpg',
-                  price: 30),
-              ProCard(
-                  placeName: 'St.Marks Basilicia',
-                  description: 'Sightseeing Tour',
-                  image: 'images/basilica.jpg',
-                  price: 30),
-            ],
-          ),
-        ),
-      ),
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        // if (snapshot.hasError) {
+        //   return SomethingWentWrong();
+        // }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return EmiShow();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Container(
+          child: Text('Loading'),
+        );
+      },
     );
   }
 }
